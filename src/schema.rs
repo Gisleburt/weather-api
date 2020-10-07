@@ -1,3 +1,4 @@
+use crate::met_office::{Location, MetApi};
 use juniper::FieldResult;
 use juniper::RootNode;
 
@@ -9,8 +10,8 @@ impl QueryRoot {
         "0.1.0"
     }
 
-    fn debug(api_key: String) -> String {
-        api_key
+    fn locations(api_key: String) -> FieldResult<Vec<Location>> {
+        Ok(MetApi::new(api_key).forecast_site_list())
     }
 }
 
