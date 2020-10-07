@@ -14,7 +14,7 @@ mod schema;
 use crate::schema::{create_schema, Schema};
 
 async fn graphiql() -> HttpResponse {
-    let html = graphiql_source("http://127.0.0.1:8080/graphql");
+    let html = graphiql_source("http://127.0.0.1:8080/");
     HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")
         .body(html)
@@ -28,7 +28,7 @@ async fn graphql(
         let res = data.execute(&st, &());
         Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
     })
-        .await?;
+    .await?;
     Ok(HttpResponse::Ok()
         .content_type("application/json")
         .body(user))
@@ -54,10 +54,13 @@ async fn main() -> io::Result<()> {
                     .max_age(3600)
                     .finish(),
             )
-            .service(web::resource("/graphql").route(web::post().to(graphql)))
-            .service(web::resource("/graphiql").route(web::get().to(graphiql)))
+            .service(
+                web::resource("/")
+                    .route(web::post().to(graphql))
+                    .route(web::get().to(graphiql)),
+            )
     })
-        .bind("127.0.0.1:8080")?
-        .run()
-        .await
+    .bind("127.0.0.1:8080")?
+    .run()
+    .await
 }
