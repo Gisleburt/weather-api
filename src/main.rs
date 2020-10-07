@@ -10,6 +10,7 @@ use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
 
 mod schema;
+mod met_office;
 
 use crate::schema::{create_schema, Schema};
 
