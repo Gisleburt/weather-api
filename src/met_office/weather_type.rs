@@ -41,8 +41,8 @@ pub enum WeatherType {
 
 #[derive(Error, Debug, PartialEq)]
 pub enum WeatherTypeCodeConversionError {
-    #[error("unexpected weather type code, found {0}")]
-    UnknownCode(String),
+    #[error("invalid weather type code, found {0}")]
+    InvalidCode(String),
     #[error("weather code documented unused, found {0}")]
     UnusedCode(String),
 }
@@ -84,7 +84,7 @@ impl TryFrom<&WeatherTypeCode> for WeatherType {
             "28" => Ok(WeatherType::ThunderShowerNight),
             "29" => Ok(WeatherType::ThunderShowerDay),
             "30" => Ok(WeatherType::Thunder),
-            _ => Err(WeatherTypeCodeConversionError::UnknownCode(code.to_string()))
+            _ => Err(WeatherTypeCodeConversionError::InvalidCode(code.to_string()))
         }
     }
 }
@@ -139,6 +139,6 @@ mod tests {
     fn test_unknown_code() {
         let result = WeatherType::try_from("An invalid code");
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), WeatherTypeCodeConversionError::UnknownCode("An invalid code".to_string()));
+        assert_eq!(result.err().unwrap(), WeatherTypeCodeConversionError::InvalidCode("An invalid code".to_string()));
     }
 }
