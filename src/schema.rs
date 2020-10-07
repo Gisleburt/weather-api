@@ -11,7 +11,7 @@ impl QueryRoot {
     }
 
     fn locations(api_key: String) -> FieldResult<Vec<Location>> {
-        Ok(MetApi::new(api_key).forecast_site_list())
+        Ok(MetApi::new(api_key).forecast_site_list()?) // ToDo: Don't leak the error
     }
 }
 
