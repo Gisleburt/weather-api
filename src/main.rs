@@ -9,8 +9,8 @@ use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
 
-mod schema;
 mod met_office;
+mod schema;
 
 use crate::schema::{create_schema, Schema};
 

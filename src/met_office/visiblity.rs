@@ -1,5 +1,5 @@
-use thiserror::Error;
 use std::convert::TryFrom;
+use thiserror::Error;
 
 type VisibilityCode = str;
 
@@ -32,7 +32,7 @@ impl TryFrom<&VisibilityCode> for Visibility {
             "GO" => Ok(Visibility::Good),
             "VG" => Ok(Visibility::VeryGood),
             "EX" => Ok(Visibility::Excellent),
-            _ => Err(VisibilityCodeConversionError::InvalidCode(code.to_string()))
+            _ => Err(VisibilityCodeConversionError::InvalidCode(code.to_string())),
         }
     }
 }
@@ -52,12 +52,13 @@ mod tests {
         assert_eq!(Visibility::try_from("EX").unwrap(), Visibility::Excellent);
     }
 
-
     #[test]
     fn test_unknown_code() {
         let result = Visibility::try_from("An invalid code");
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), VisibilityCodeConversionError::InvalidCode("An invalid code".to_string()));
+        assert_eq!(
+            result.err().unwrap(),
+            VisibilityCodeConversionError::InvalidCode("An invalid code".to_string())
+        );
     }
 }
-

@@ -1,3 +1,3 @@
-mod weather_type;
-mod visiblity;
 mod uv;
+mod visiblity;
+mod weather_type;

@@ -17,9 +17,7 @@ impl QueryRoot {
 pub struct MutationRoot;
 
 #[juniper::object]
-impl MutationRoot {
-
-}
+impl MutationRoot {}
 
 pub type Schema = RootNode<'static, QueryRoot, MutationRoot>;
 
