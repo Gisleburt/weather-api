@@ -8,8 +8,9 @@ use crate::met_office::{
 use chrono::{Duration, NaiveDateTime};
 use juniper::GraphQLObject;
 use serde::Serialize;
-use std::convert::{TryFrom, TryInto};
+use std::convert::{TryFrom};
 use std::ops::Add;
+use std::str::FromStr;
 use thiserror::Error;
 
 #[derive(GraphQLObject, Serialize)]
@@ -61,11 +62,11 @@ impl TryFrom<(i32, &str, &Rep)> for Forecast {
             wind_gust: weather.g.parse()?,
             screen_relative_humidity: weather.h.parse()?,
             temperature: weather.t.parse()?,
-            visibility: weather.v.as_str().try_into()?,
-            wind_direction: weather.d.as_str().try_into()?,
+            visibility: Visibility::from_str(&weather.v)?,
+            wind_direction: Direction::from_str(&weather.d)?,
             wind_speed: weather.s.parse()?,
-            max_uv_index: weather.u.as_str().try_into()?,
-            weather_type: weather.w.as_str().try_into()?,
+            max_uv_index: UvIndex::from_str(&weather.u)?,
+            weather_type: WeatherType::from_str(&weather.w)?,
             precipitation_probability: weather.pp.parse()?,
         })
     }

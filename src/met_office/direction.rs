@@ -1,9 +1,7 @@
 use juniper::GraphQLEnum;
 use serde::Serialize;
-use std::convert::TryFrom;
+use std::str::FromStr;
 use thiserror::Error;
-
-type CompassInitials = str;
 
 #[derive(Debug, PartialEq, Serialize, GraphQLEnum)]
 pub enum Direction {
@@ -31,10 +29,10 @@ pub enum DirectionConversionError {
     InvalidDirection(String),
 }
 
-impl TryFrom<&CompassInitials> for Direction {
-    type Error = DirectionConversionError;
+impl FromStr for Direction {
+    type Err = DirectionConversionError;
 
-    fn try_from(value: &CompassInitials) -> Result<Self, Self::Error> {
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
             "N" => Ok(Self::North),
             "NNE" => Ok(Self::NorthNorthEast),
@@ -65,44 +63,44 @@ mod tests {
 
     #[test]
     fn test_directions() {
-        assert_eq!(Direction::try_from("N").unwrap(), Direction::North);
+        assert_eq!(Direction::from_str("N").unwrap(), Direction::North);
         assert_eq!(
-            Direction::try_from("NNE").unwrap(),
+            Direction::from_str("NNE").unwrap(),
             Direction::NorthNorthEast
         );
-        assert_eq!(Direction::try_from("NE").unwrap(), Direction::NorthEast);
+        assert_eq!(Direction::from_str("NE").unwrap(), Direction::NorthEast);
         assert_eq!(
-            Direction::try_from("ENE").unwrap(),
+            Direction::from_str("ENE").unwrap(),
             Direction::EastNorthEast
         );
-        assert_eq!(Direction::try_from("E").unwrap(), Direction::East);
+        assert_eq!(Direction::from_str("E").unwrap(), Direction::East);
         assert_eq!(
-            Direction::try_from("ESE").unwrap(),
+            Direction::from_str("ESE").unwrap(),
             Direction::EastSouthEast
         );
-        assert_eq!(Direction::try_from("SE").unwrap(), Direction::SouthEast);
+        assert_eq!(Direction::from_str("SE").unwrap(), Direction::SouthEast);
         assert_eq!(
-            Direction::try_from("SSE").unwrap(),
+            Direction::from_str("SSE").unwrap(),
             Direction::SouthSouthEast
         );
-        assert_eq!(Direction::try_from("S").unwrap(), Direction::South);
+        assert_eq!(Direction::from_str("S").unwrap(), Direction::South);
         assert_eq!(
-            Direction::try_from("SSW").unwrap(),
+            Direction::from_str("SSW").unwrap(),
             Direction::SouthSouthWest
         );
-        assert_eq!(Direction::try_from("SW").unwrap(), Direction::SouthWest);
+        assert_eq!(Direction::from_str("SW").unwrap(), Direction::SouthWest);
         assert_eq!(
-            Direction::try_from("WSW").unwrap(),
+            Direction::from_str("WSW").unwrap(),
             Direction::WestSouthWest
         );
-        assert_eq!(Direction::try_from("W").unwrap(), Direction::West);
+        assert_eq!(Direction::from_str("W").unwrap(), Direction::West);
         assert_eq!(
-            Direction::try_from("WNW").unwrap(),
+            Direction::from_str("WNW").unwrap(),
             Direction::WestNorthWest
         );
-        assert_eq!(Direction::try_from("NW").unwrap(), Direction::NorthWest);
+        assert_eq!(Direction::from_str("NW").unwrap(), Direction::NorthWest);
         assert_eq!(
-            Direction::try_from("NNW").unwrap(),
+            Direction::from_str("NNW").unwrap(),
             Direction::NorthNorthWest
         );
     }
@@ -110,7 +108,7 @@ mod tests {
     #[test]
     fn test_direction_error() {
         assert_eq!(
-            Direction::try_from("not a direction").unwrap_err(),
+            Direction::from_str("not a direction").unwrap_err(),
             DirectionConversionError::InvalidDirection("not a direction".to_string())
         );
     }

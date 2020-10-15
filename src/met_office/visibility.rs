@@ -1,9 +1,7 @@
 use juniper::GraphQLEnum;
 use serde::Serialize;
-use std::convert::TryFrom;
+use std::str::FromStr;
 use thiserror::Error;
-
-type VisibilityCode = str;
 
 #[derive(Debug, Eq, PartialEq, GraphQLEnum, Serialize)]
 pub enum Visibility {
@@ -22,10 +20,10 @@ pub enum VisibilityCodeConversionError {
     InvalidCode(String),
 }
 
-impl TryFrom<&VisibilityCode> for Visibility {
-    type Error = VisibilityCodeConversionError;
+impl FromStr for Visibility {
+    type Err = VisibilityCodeConversionError;
 
-    fn try_from(code: &str) -> Result<Self, Self::Error> {
+    fn from_str(code: &str) -> Result<Self, Self::Err> {
         match code {
             "UN" => Ok(Visibility::Unknown),
             "VP" => Ok(Visibility::VeryPoor),
@@ -45,21 +43,19 @@ mod tests {
 
     #[test]
     fn test_all_valid_visibility_codes() {
-        assert_eq!(Visibility::try_from("UN").unwrap(), Visibility::Unknown);
-        assert_eq!(Visibility::try_from("VP").unwrap(), Visibility::VeryPoor);
-        assert_eq!(Visibility::try_from("PO").unwrap(), Visibility::Poor);
-        assert_eq!(Visibility::try_from("MO").unwrap(), Visibility::Moderate);
-        assert_eq!(Visibility::try_from("GO").unwrap(), Visibility::Good);
-        assert_eq!(Visibility::try_from("VG").unwrap(), Visibility::VeryGood);
-        assert_eq!(Visibility::try_from("EX").unwrap(), Visibility::Excellent);
+        assert_eq!(Visibility::from_str("UN").unwrap(), Visibility::Unknown);
+        assert_eq!(Visibility::from_str("VP").unwrap(), Visibility::VeryPoor);
+        assert_eq!(Visibility::from_str("PO").unwrap(), Visibility::Poor);
+        assert_eq!(Visibility::from_str("MO").unwrap(), Visibility::Moderate);
+        assert_eq!(Visibility::from_str("GO").unwrap(), Visibility::Good);
+        assert_eq!(Visibility::from_str("VG").unwrap(), Visibility::VeryGood);
+        assert_eq!(Visibility::from_str("EX").unwrap(), Visibility::Excellent);
     }
 
     #[test]
     fn test_unknown_code() {
-        let result = Visibility::try_from("An invalid code");
-        assert!(result.is_err());
         assert_eq!(
-            result.err().unwrap(),
+            Visibility::from_str("An invalid code").unwrap_err(),
             VisibilityCodeConversionError::InvalidCode("An invalid code".to_string())
         );
     }

@@ -1,9 +1,7 @@
 use juniper::GraphQLEnum;
 use serde::Serialize;
-use std::convert::TryFrom;
+use std::str::FromStr;
 use thiserror::Error;
-
-pub type WeatherTypeCode = str;
 
 #[derive(Debug, Eq, PartialEq, Serialize, GraphQLEnum)]
 pub enum WeatherType {
@@ -49,10 +47,10 @@ pub enum WeatherTypeCodeConversionError {
     UnusedCode(String),
 }
 
-impl TryFrom<&WeatherTypeCode> for WeatherType {
-    type Error = WeatherTypeCodeConversionError;
+impl FromStr for WeatherType {
+    type Err = WeatherTypeCodeConversionError;
 
-    fn try_from(code: &WeatherTypeCode) -> Result<Self, Self::Error> {
+    fn from_str(code: &str) -> Result<Self, Self::Err> {
         match code {
             "NA" => Ok(WeatherType::NotAvailable),
             "0" => Ok(WeatherType::ClearNight),
@@ -100,92 +98,92 @@ mod tests {
     #[test]
     fn test_all_valid_weather_codes() {
         assert_eq!(
-            WeatherType::try_from("NA").unwrap(),
+            WeatherType::from_str("NA").unwrap(),
             WeatherType::NotAvailable
         );
-        assert_eq!(WeatherType::try_from("0").unwrap(), WeatherType::ClearNight);
-        assert_eq!(WeatherType::try_from("1").unwrap(), WeatherType::SunnyDay);
+        assert_eq!(WeatherType::from_str("0").unwrap(), WeatherType::ClearNight);
+        assert_eq!(WeatherType::from_str("1").unwrap(), WeatherType::SunnyDay);
         assert_eq!(
-            WeatherType::try_from("2").unwrap(),
+            WeatherType::from_str("2").unwrap(),
             WeatherType::PartlyCloudyNight
         );
         assert_eq!(
-            WeatherType::try_from("3").unwrap(),
+            WeatherType::from_str("3").unwrap(),
             WeatherType::PartlyCloudyDay
         );
-        assert_eq!(WeatherType::try_from("5").unwrap(), WeatherType::Mist);
-        assert_eq!(WeatherType::try_from("6").unwrap(), WeatherType::Fog);
-        assert_eq!(WeatherType::try_from("7").unwrap(), WeatherType::Cloudy);
-        assert_eq!(WeatherType::try_from("8").unwrap(), WeatherType::Overcast);
+        assert_eq!(WeatherType::from_str("5").unwrap(), WeatherType::Mist);
+        assert_eq!(WeatherType::from_str("6").unwrap(), WeatherType::Fog);
+        assert_eq!(WeatherType::from_str("7").unwrap(), WeatherType::Cloudy);
+        assert_eq!(WeatherType::from_str("8").unwrap(), WeatherType::Overcast);
         assert_eq!(
-            WeatherType::try_from("9").unwrap(),
+            WeatherType::from_str("9").unwrap(),
             WeatherType::LightRainShowerNight
         );
         assert_eq!(
-            WeatherType::try_from("10").unwrap(),
+            WeatherType::from_str("10").unwrap(),
             WeatherType::LightRainShowerDay
         );
-        assert_eq!(WeatherType::try_from("11").unwrap(), WeatherType::Drizzle);
-        assert_eq!(WeatherType::try_from("12").unwrap(), WeatherType::LightRain);
+        assert_eq!(WeatherType::from_str("11").unwrap(), WeatherType::Drizzle);
+        assert_eq!(WeatherType::from_str("12").unwrap(), WeatherType::LightRain);
         assert_eq!(
-            WeatherType::try_from("13").unwrap(),
+            WeatherType::from_str("13").unwrap(),
             WeatherType::HeavyRainShowerNight
         );
         assert_eq!(
-            WeatherType::try_from("14").unwrap(),
+            WeatherType::from_str("14").unwrap(),
             WeatherType::HeavyRainShowerDay
         );
-        assert_eq!(WeatherType::try_from("15").unwrap(), WeatherType::HeavyRain);
+        assert_eq!(WeatherType::from_str("15").unwrap(), WeatherType::HeavyRain);
         assert_eq!(
-            WeatherType::try_from("16").unwrap(),
+            WeatherType::from_str("16").unwrap(),
             WeatherType::SleetShowerNight
         );
         assert_eq!(
-            WeatherType::try_from("17").unwrap(),
+            WeatherType::from_str("17").unwrap(),
             WeatherType::SleetShowerDay
         );
-        assert_eq!(WeatherType::try_from("18").unwrap(), WeatherType::Sleet);
+        assert_eq!(WeatherType::from_str("18").unwrap(), WeatherType::Sleet);
         assert_eq!(
-            WeatherType::try_from("19").unwrap(),
+            WeatherType::from_str("19").unwrap(),
             WeatherType::HailShowerNight
         );
         assert_eq!(
-            WeatherType::try_from("20").unwrap(),
+            WeatherType::from_str("20").unwrap(),
             WeatherType::HailShowerDay
         );
-        assert_eq!(WeatherType::try_from("21").unwrap(), WeatherType::Hail);
+        assert_eq!(WeatherType::from_str("21").unwrap(), WeatherType::Hail);
         assert_eq!(
-            WeatherType::try_from("22").unwrap(),
+            WeatherType::from_str("22").unwrap(),
             WeatherType::LightSnowShowerNight
         );
         assert_eq!(
-            WeatherType::try_from("23").unwrap(),
+            WeatherType::from_str("23").unwrap(),
             WeatherType::LightSnowShowerDay
         );
-        assert_eq!(WeatherType::try_from("24").unwrap(), WeatherType::LightSnow);
+        assert_eq!(WeatherType::from_str("24").unwrap(), WeatherType::LightSnow);
         assert_eq!(
-            WeatherType::try_from("25").unwrap(),
+            WeatherType::from_str("25").unwrap(),
             WeatherType::HeavySnowShowerNight
         );
         assert_eq!(
-            WeatherType::try_from("26").unwrap(),
+            WeatherType::from_str("26").unwrap(),
             WeatherType::HeavySnowShowerDay
         );
-        assert_eq!(WeatherType::try_from("27").unwrap(), WeatherType::HeavySnow);
+        assert_eq!(WeatherType::from_str("27").unwrap(), WeatherType::HeavySnow);
         assert_eq!(
-            WeatherType::try_from("28").unwrap(),
+            WeatherType::from_str("28").unwrap(),
             WeatherType::ThunderShowerNight
         );
         assert_eq!(
-            WeatherType::try_from("29").unwrap(),
+            WeatherType::from_str("29").unwrap(),
             WeatherType::ThunderShowerDay
         );
-        assert_eq!(WeatherType::try_from("30").unwrap(), WeatherType::Thunder);
+        assert_eq!(WeatherType::from_str("30").unwrap(), WeatherType::Thunder);
     }
 
     #[test]
     fn test_unused_code() {
-        let result = WeatherType::try_from("4");
+        let result = WeatherType::from_str("4");
         assert!(result.is_err());
         assert_eq!(
             result.err().unwrap(),
@@ -195,7 +193,7 @@ mod tests {
 
     #[test]
     fn test_unknown_code() {
-        let result = WeatherType::try_from("An invalid code");
+        let result = WeatherType::from_str("An invalid code");
         assert!(result.is_err());
         assert_eq!(
             result.err().unwrap(),
