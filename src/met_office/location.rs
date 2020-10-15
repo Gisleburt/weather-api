@@ -3,6 +3,7 @@ use serde::Deserialize;
 use std::str::FromStr;
 use thiserror::Error;
 
+#[derive(Debug, PartialEq)]
 pub enum LocationId {
     All,
     Location(u32),
@@ -60,4 +61,30 @@ pub struct LocationsResponse {
 #[serde(rename_all = "PascalCase")]
 pub struct Locations {
     pub location: Vec<Location>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_convert_all() {
+        assert_eq!(LocationId::from_str("all").unwrap(), LocationId::All)
+    }
+
+    #[test]
+    fn test_convert_id() {
+        assert_eq!(
+            LocationId::from_str("101").unwrap(),
+            LocationId::Location(101)
+        )
+    }
+
+    #[test]
+    fn test_convert_other() {
+        assert_eq!(
+            LocationId::from_str("not all or numeric").unwrap_err(),
+            LocationConversionError::InvalidLocation("not all or numeric".to_string())
+        )
+    }
 }

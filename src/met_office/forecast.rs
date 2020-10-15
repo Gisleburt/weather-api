@@ -5,12 +5,12 @@ use crate::met_office::{
     visibility::{Visibility, VisibilityCodeConversionError},
     weather_type::{WeatherType, WeatherTypeCodeConversionError},
 };
-use chrono::{NaiveDateTime, Duration};
+use chrono::{Duration, NaiveDateTime};
 use juniper::GraphQLObject;
 use serde::Serialize;
 use std::convert::{TryFrom, TryInto};
-use thiserror::Error;
 use std::ops::Add;
+use thiserror::Error;
 
 #[derive(GraphQLObject, Serialize)]
 pub struct Forecast {
