@@ -1,6 +1,7 @@
-use crate::met_office::{Location, MetApi};
+use crate::met_office::{Forecast, Location, LocationId, MetApi};
 use juniper::FieldResult;
 use juniper::RootNode;
+use std::str::FromStr;
 
 pub struct QueryRoot;
 
@@ -12,6 +13,11 @@ impl QueryRoot {
 
     fn locations(api_key: String) -> FieldResult<Vec<Location>> {
         Ok(MetApi::new(api_key).forecast_site_list()?) // ToDo: Don't leak the error
+    }
+
+    fn forecast(api_key: String, location: String) -> FieldResult<Vec<Forecast>> {
+        let location_id = LocationId::from_str(&location)?;
+        Ok(MetApi::new(api_key).forecast(location_id)?.0) // ToDo: Don't leak the error
     }
 }
 

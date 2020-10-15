@@ -1,10 +1,12 @@
+use juniper::GraphQLEnum;
+use serde::Serialize;
 use std::convert::TryFrom;
 use thiserror::Error;
 
 type VisibilityCode = str;
 
-#[derive(Debug, Eq, PartialEq)]
-enum Visibility {
+#[derive(Debug, Eq, PartialEq, GraphQLEnum, Serialize)]
+pub enum Visibility {
     Unknown,
     VeryPoor,
     Poor,

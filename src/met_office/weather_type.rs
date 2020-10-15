@@ -1,9 +1,11 @@
+use juniper::GraphQLEnum;
+use serde::Serialize;
 use std::convert::TryFrom;
 use thiserror::Error;
 
 pub type WeatherTypeCode = str;
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Serialize, GraphQLEnum)]
 pub enum WeatherType {
     NotAvailable,
     ClearNight,

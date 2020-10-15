@@ -1,22 +1,25 @@
+use juniper::GraphQLObject;
+use serde::Serialize;
 use std::convert::TryFrom;
 use thiserror::Error;
 
 type UvCode = str;
+type UvNumberType = i32;
 
-#[derive(Debug, Eq, PartialEq)]
-struct UvIndex {
-    index: u8,
+#[derive(Debug, Eq, PartialEq, Serialize, GraphQLObject)]
+pub struct UvIndex {
+    index: UvNumberType,
     description: &'static str,
 }
 
 impl UvIndex {
-    fn index_to_description(index: u8) -> &'static str {
+    fn index_to_description(index: UvNumberType) -> &'static str {
         match index {
-            0..=2 => "Low exposure. No protection required. You can safely stay outside",
+            UvNumberType::MIN..=2 => "Low exposure. No protection required. You can safely stay outside",
             3..=5 => "Moderate exposure. Seek shade during midday hours, cover up and wear sunscreen",
             6..=7 => "High exposure. Seek shade during midday hours, cover up and wear sunscreen",
             8..=10 => "Very high. Avoid being outside during midday hours. Shirt, sunscreen and hat are essential",
-            11..=u8::MAX => "Extreme. Avoid being outside during midday hours. Shirt, sunscreen and hat essential.",
+            11..=UvNumberType::MAX => "Extreme. Avoid being outside during midday hours. Shirt, sunscreen and hat essential.",
         }
     }
 }
@@ -31,7 +34,7 @@ impl TryFrom<&UvCode> for UvIndex {
     type Error = UvCodeConversionError;
 
     fn try_from(code: &UvCode) -> Result<Self, Self::Error> {
-        let index: u8 = code
+        let index = code
             .parse()
             .map_err(|_| UvCodeConversionError::InvalidCode(code.to_string()))?;
         let description = UvIndex::index_to_description(index);
